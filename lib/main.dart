@@ -31,3 +31,39 @@ class FeedScreen extends StatelessWidget {
     );
   }
 }
+
+// 목데이터 영역
+final List<Map<String, dynamic>> mockPosts = [
+  {
+    'username': 'wondde',
+    'userIamge': 'https://placehold.co/400',
+    'postImage': 'https://placehold.co/400',
+    'caption': 'dkdk',
+    'likes': 99,
+    'isLiked': true,
+  },
+  {
+    'username': 'wondde',
+    'userIamge': 'https://placehold.co/400',
+    'postImage': 'https://placehold.co/400',
+    'caption': 'dkdk',
+    'likes': 99,
+    'isLiked': false,
+  },
+  {
+    'username': 'wondde',
+    'userIamge': 'https://placehold.co/400',
+    'postImage': 'https://placehold.co/400',
+    'caption': 'dkdk',
+    'likes': 99,
+    'isLiked': true,
+  },
+  {
+    'username': 'wondde',
+    'userIamge': 'https://placehold.co/400',
+    'postImage': 'https://placehold.co/400',
+    'caption': 'dkdk',
+    'likes': 13,
+    'isLiked': false,
+  },
+];
