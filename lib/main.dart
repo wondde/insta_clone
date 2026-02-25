@@ -39,7 +39,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ), // body에 그냥 _screens[_currentIndex] 주면 현재 탭만 빌드함. 메모리는 절약하겠지만 상태 유실,,
+      // indexedStack 쓰면 모든 탭을 빌드해서 메모리는 더 쓰지만 상태는 유지함.
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
