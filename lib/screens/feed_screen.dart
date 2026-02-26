@@ -76,6 +76,7 @@ class _PostCardState extends State<PostCard>
   late bool isLiked;
   late int likedCount;
   bool _showHeartOverlay = false;
+  late bool _isBookmarked;
 
   late AnimationController _heartAnimationController;
   late Animation<double> _heartAnimaion;
@@ -85,6 +86,7 @@ class _PostCardState extends State<PostCard>
     super.initState();
     isLiked = widget.post['isLiked'];
     likedCount = widget.post['likes'];
+    _isBookmarked = false;
 
     _heartAnimationController = AnimationController(
       vsync: this,
@@ -230,7 +232,16 @@ class _PostCardState extends State<PostCard>
               SizedBox(width: 10),
               Icon(Icons.send_outlined),
               Spacer(),
-              Icon(Icons.bookmark_border),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isBookmarked = !_isBookmarked;
+                  });
+                },
+                child: Icon(
+                  _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                ),
+              ),
             ],
           ),
         ),
