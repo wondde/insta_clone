@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 피드 스크린
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
 
@@ -59,24 +60,60 @@ final List<Map<String, dynamic>> mockPosts = [
   },
 ];
 
+/// 포스트카드 위젯
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> post;
 
+  /// 포스트카드 생성자
   const PostCard({super.key, required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostCardState extends State<PostCard>
+    with SingleTickerProviderStateMixin {
   late bool isLiked;
   late int likedCount;
+  bool _showHeartOverlay = false;
+
+  late AnimationController _heartAnimationController;
+  late Animation<double> _heartAnimaion;
 
   @override
   void initState() {
     super.initState();
     isLiked = widget.post['isLiked'];
     likedCount = widget.post['likes'];
+
+    _heartAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _heartAnimaion = Tween<double>(begin: 0.8, end: 1.4).animate(
+      CurvedAnimation(
+        parent: _heartAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _heartAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _heartAnimationController.reverse();
+      }
+      if (status == AnimationStatus.dismissed) {
+        setState(() {
+          _showHeartOverlay = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _heartAnimationController.dispose();
+    super.dispose();
   }
 
   void _toggleLike() {
@@ -84,6 +121,20 @@ class _PostCardState extends State<PostCard> {
       isLiked = !isLiked;
       likedCount += isLiked ? 1 : -1;
     });
+  }
+
+  void _onDoubleTap() {
+    if (!isLiked) {
+      setState(() {
+        isLiked = true;
+        likedCount += 1;
+      });
+    }
+
+    setState(() {
+      _showHeartOverlay = true;
+    });
+    _heartAnimationController.forward(from: 0.0);
   }
 
   @override
@@ -112,19 +163,47 @@ class _PostCardState extends State<PostCard> {
         ),
 
         // 게시물
-        Image.network(
-          widget.post['postImage'],
-          width: double.infinity,
-          fit: BoxFit.fill,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Container(
-              width: double.infinity,
-              height: 400,
-              color: Colors.grey,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          },
+        GestureDetector(
+          onDoubleTap: _onDoubleTap,
+          child: Stack(
+            children: [
+              Image.network(
+                widget.post['postImage'],
+                width: double.infinity,
+                fit: BoxFit.fill,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    width: double.infinity,
+                    height: 400,
+                    color: Colors.grey,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                },
+              ),
+              if (_showHeartOverlay)
+                Positioned.fill(
+                  child: Center(
+                    child: AnimatedBuilder(
+                      animation: _heartAnimaion,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _heartAnimaion.value,
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                            size: 100,
+                            shadows: [
+                              Shadow(blurRadius: 20, color: Colors.black26),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
 
         // 액션 버튼 (일단 재투고버튼이랑 공유 횟수는 생략)
