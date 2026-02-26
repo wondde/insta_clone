@@ -59,10 +59,32 @@ final List<Map<String, dynamic>> mockPosts = [
   },
 ];
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Map<String, dynamic> post;
 
   const PostCard({super.key, required this.post});
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  late bool isLiked;
+  late int likedCount;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.post['isLiked'];
+    likedCount = widget.post['likes'];
+  }
+
+  void _toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+      likedCount += isLiked ? 1 : -1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +98,11 @@ class PostCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundImage: NetworkImage(post['userImage']),
+                backgroundImage: NetworkImage(widget.post['userImage']),
               ),
               SizedBox(width: 10),
               Text(
-                post['username'],
+                widget.post['username'],
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Spacer(),
@@ -91,7 +113,7 @@ class PostCard extends StatelessWidget {
 
         // 게시물
         Image.network(
-          post['postImage'],
+          widget.post['postImage'],
           width: double.infinity,
           fit: BoxFit.fill,
           loadingBuilder: (context, child, loadingProgress) {
@@ -110,16 +132,22 @@ class PostCard extends StatelessWidget {
           padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
-              Icon(
-                post['isLiked'] ? Icons.favorite : Icons.favorite_border,
-                color: post['isLiked'] ? Colors.red : Colors.black,
+              GestureDetector(
+                onTap: _toggleLike,
+                child: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : Colors.black,
+                ),
               ),
               SizedBox(width: 5),
-              Text(post['likes'].toString()),
+              Text(
+                likedCount.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(width: 10),
               Icon(Icons.mode_comment_outlined),
               SizedBox(width: 5),
-              Text(post['comments'].toString()),
+              Text(widget.post['comments'].toString()),
               SizedBox(width: 10),
               Icon(Icons.send_outlined),
               Spacer(),
@@ -136,10 +164,10 @@ class PostCard extends StatelessWidget {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: post['username'],
+                  text: widget.post['username'],
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                TextSpan(text: post['caption']),
+                TextSpan(text: widget.post['caption']),
               ],
             ),
           ),
