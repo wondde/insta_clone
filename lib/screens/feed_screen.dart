@@ -32,7 +32,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': true,
   },
   {
-    'username': 'wondde',
+    'username': 'hegunhee',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -41,7 +41,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': false,
   },
   {
-    'username': 'wondde',
+    'username': 'vagus3',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -50,7 +50,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': true,
   },
   {
-    'username': 'wondde',
+    'username': 'moho3',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -77,7 +77,13 @@ class PostCard extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(
+                    username: post['username'],
+                    userImage: post['userImage'],
+                    isMyProfile: false,
+                  ),
+                ),
               );
             },
             child: Row(

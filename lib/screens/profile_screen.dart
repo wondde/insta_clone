@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 
 /// 프로필 스크린
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final String username;
+  final String userImage;
+  final bool isMyProfile;
+
+  const ProfileScreen({
+    super.key,
+    this.username = 'my_username',
+    this.userImage = 'https://i.pravatar.cc/150?img=5',
+    this.isMyProfile = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'wondde',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(onPressed: null, icon: Icon(Icons.add_box_outlined)),
           IconButton(onPressed: null, icon: Icon(Icons.menu)),
@@ -98,12 +104,12 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildBio() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('승원', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 4),
             Text("안녕하세요"),
           ],
