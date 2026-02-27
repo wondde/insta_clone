@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
+/// 피드 스크린
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
 
@@ -60,10 +61,84 @@ final List<Map<String, dynamic>> mockPosts = [
   },
 ];
 
-class PostCard extends StatelessWidget {
+/// 포스트카드 위젯
+class PostCard extends StatefulWidget {
   final Map<String, dynamic> post;
 
+  /// 포스트카드 생성자
   const PostCard({super.key, required this.post});
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard>
+    with SingleTickerProviderStateMixin {
+  late bool isLiked;
+  late int likedCount;
+  bool _showHeartOverlay = false;
+  late bool _isBookmarked;
+
+  late AnimationController _heartAnimationController;
+  late Animation<double> _heartAnimaion;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.post['isLiked'];
+    likedCount = widget.post['likes'];
+    _isBookmarked = false;
+
+    _heartAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _heartAnimaion = Tween<double>(begin: 0.8, end: 1.4).animate(
+      CurvedAnimation(
+        parent: _heartAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _heartAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _heartAnimationController.reverse();
+      }
+      if (status == AnimationStatus.dismissed) {
+        setState(() {
+          _showHeartOverlay = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _heartAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+      likedCount += isLiked ? 1 : -1;
+    });
+  }
+
+  void _onDoubleTap() {
+    if (!isLiked) {
+      setState(() {
+        isLiked = true;
+        likedCount += 1;
+      });
+    }
+
+    setState(() {
+      _showHeartOverlay = true;
+    });
+    _heartAnimationController.forward(from: 0.0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,19 +180,47 @@ class PostCard extends StatelessWidget {
         ),
 
         // 게시물
-        Image.network(
-          post['postImage'],
-          width: double.infinity,
-          fit: BoxFit.fill,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Container(
-              width: double.infinity,
-              height: 400,
-              color: Colors.grey,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          },
+        GestureDetector(
+          onDoubleTap: _onDoubleTap,
+          child: Stack(
+            children: [
+              Image.network(
+                widget.post['postImage'],
+                width: double.infinity,
+                fit: BoxFit.fill,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    width: double.infinity,
+                    height: 400,
+                    color: Colors.grey,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                },
+              ),
+              if (_showHeartOverlay)
+                Positioned.fill(
+                  child: Center(
+                    child: AnimatedBuilder(
+                      animation: _heartAnimaion,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _heartAnimaion.value,
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                            size: 100,
+                            shadows: [
+                              Shadow(blurRadius: 20, color: Colors.black26),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
 
         // 액션 버튼 (일단 재투고버튼이랑 공유 횟수는 생략)
@@ -125,20 +228,35 @@ class PostCard extends StatelessWidget {
           padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
-              Icon(
-                post['isLiked'] ? Icons.favorite : Icons.favorite_border,
-                color: post['isLiked'] ? Colors.red : Colors.black,
+              GestureDetector(
+                onTap: _toggleLike,
+                child: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : Colors.black,
+                ),
               ),
               SizedBox(width: 5),
-              Text(post['likes'].toString()),
+              Text(
+                likedCount.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(width: 10),
               Icon(Icons.mode_comment_outlined),
               SizedBox(width: 5),
-              Text(post['comments'].toString()),
+              Text(widget.post['comments'].toString()),
               SizedBox(width: 10),
               Icon(Icons.send_outlined),
               Spacer(),
-              Icon(Icons.bookmark_border),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isBookmarked = !_isBookmarked;
+                  });
+                },
+                child: Icon(
+                  _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                ),
+              ),
             ],
           ),
         ),
@@ -151,10 +269,10 @@ class PostCard extends StatelessWidget {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: post['username'],
+                  text: widget.post['username'],
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                TextSpan(text: post['caption']),
+                TextSpan(text: widget.post['caption']),
               ],
             ),
           ),
