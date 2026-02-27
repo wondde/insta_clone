@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/screens/profile_screen.dart';
 
 /// 피드 스크린
 class FeedScreen extends StatelessWidget {
@@ -32,7 +33,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': true,
   },
   {
-    'username': 'wondde',
+    'username': 'hegunhee',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -41,7 +42,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': false,
   },
   {
-    'username': 'wondde',
+    'username': 'vagus3',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -50,7 +51,7 @@ final List<Map<String, dynamic>> mockPosts = [
     'isLiked': true,
   },
   {
-    'username': 'wondde',
+    'username': 'moho3',
     'userImage': 'https://picsum.photos/200',
     'postImage': 'https://picsum.photos/200',
     'caption': 'dkdk',
@@ -147,20 +148,34 @@ class _PostCardState extends State<PostCard>
         // 헤더 (프로필 사진, 이름, 더보기)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(widget.post['userImage']),
-              ),
-              SizedBox(width: 10),
-              Text(
-                widget.post['username'],
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Spacer(),
-              Icon(Icons.more_horiz),
-            ],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(
+                    username: post['username'],
+                    userImage: post['userImage'],
+                    isMyProfile: false,
+                  ),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundImage: NetworkImage(post['userImage']),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  post['username'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Icon(Icons.more_horiz),
+              ],
+            ),
           ),
         ),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/feed_screen.dart';
+import 'package:insta_clone/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
     Center(child: Text('검색부분')), // 아직 빈 화면
     Center(child: Text('새 게시물')),
     Center(child: Text('릴스')),
-    Center(child: Text('프로필')),
+    ProfileScreen(),
   ];
 
   @override
