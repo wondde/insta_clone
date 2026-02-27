@@ -32,8 +32,8 @@ class ProfileScreen extends StatelessWidget {
             // 바이오
             _buildBio(),
 
-            // 프로필 편집 버튼
-            _buildEditButton(),
+            // 프로필 편집 버튼 or 팔로우 버튼
+            _buildActionButton(),
 
             // 게시물 그리드
             _buildPostGrid(),
@@ -43,6 +43,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // 프로필 헤더 영역
   Widget _buildProfileHeader() {
     return Padding(
       padding: const EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 12),
@@ -101,6 +102,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // 프로필 바이오
   Widget _buildBio() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -118,6 +120,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // 프로필 편집 버튼
   Widget _buildEditButton() {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 12),
@@ -128,6 +131,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // 게시물 그리드
   Widget _buildPostGrid() {
     final List<String> postImages = List.generate(
       90,
@@ -146,6 +150,36 @@ class ProfileScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         return Image.network(postImages[index], fit: BoxFit.cover);
       },
+    );
+  }
+
+  // 액션 버튼 (프로필 편집 or 팔로우 버튼)
+  Widget _buildActionButton() {
+    if (isMyProfile) {
+      return _buildEditButton();
+    } else {
+      return _buildFollowButton();
+    }
+  }
+
+  // 팔로우 버튼
+  Widget _buildFollowButton() {
+    return Padding(
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.circular(8),
+            ),
+          ),
+          child: Text('팔로우'),
+        ),
+      ),
     );
   }
 }
