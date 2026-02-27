@@ -154,8 +154,8 @@ class _PostCardState extends State<PostCard>
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
-                    username: post['username'],
-                    userImage: post['userImage'],
+                    username: widget.post['username'],
+                    userImage: widget.post['userImage'],
                     isMyProfile: false,
                   ),
                 ),
@@ -165,11 +165,11 @@ class _PostCardState extends State<PostCard>
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(post['userImage']),
+                  backgroundImage: NetworkImage(widget.post['userImage']),
                 ),
                 SizedBox(width: 10),
                 Text(
-                  post['username'],
+                  widget.post['username'],
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
