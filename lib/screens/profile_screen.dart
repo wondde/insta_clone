@@ -35,8 +35,30 @@ class ProfileScreen extends StatelessWidget {
             // 프로필 편집 버튼 or 팔로우 버튼
             _buildActionButton(),
 
-            // 게시물 그리드
-            _buildPostGrid(),
+            // 탭바
+            DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: [
+                      Tab(icon: Icon(Icons.grid_on)),
+                      Tab(icon: Icon(Icons.person_pin_outlined)),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 400,
+                    child: TabBarView(
+                      children: [
+                        // 게시물 그리드
+                        _buildPostGrid(),
+                        const Center(child: Text('태그된 사진이 없습니당')),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
