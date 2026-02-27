@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/screens/profile_screen.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -72,20 +73,28 @@ class PostCard extends StatelessWidget {
         // 헤더 (프로필 사진, 이름, 더보기)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(post['userImage']),
-              ),
-              SizedBox(width: 10),
-              Text(
-                post['username'],
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Spacer(),
-              Icon(Icons.more_horiz),
-            ],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundImage: NetworkImage(post['userImage']),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  post['username'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Icon(Icons.more_horiz),
+              ],
+            ),
           ),
         ),
 
