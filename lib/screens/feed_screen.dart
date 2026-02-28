@@ -46,46 +46,6 @@ class FeedScreen extends StatelessWidget {
   }
 }
 
-// 목데이터 영역
-final List<Map<String, dynamic>> mockPosts = [
-  {
-    'username': 'wondde',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': true,
-  },
-  {
-    'username': 'hegunhee',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': false,
-  },
-  {
-    'username': 'vagus3',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': true,
-  },
-  {
-    'username': 'moho3',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 13,
-    'comments': 13,
-    'isLiked': false,
-  },
-];
-
 /// 포스트카드 위젯
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> post;
