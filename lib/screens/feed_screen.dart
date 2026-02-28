@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
@@ -11,55 +12,39 @@ class FeedScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Instagram', style: TextStyle(fontSize: 28)),
       ),
-      body: ListView.builder(
-        itemCount: mockPosts.length,
-        itemBuilder: (context, index) {
-          return PostCard(post: mockPosts[index]);
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          // 로딩
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          // 에러
+          if (snapshot.hasError) {
+            return Center(child: Text('에러 메시지: ${snapshot.error}'));
+          }
+          // 데이터가 없는 경우
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('게시물이 없습닌다.'));
+          }
+
+          final posts = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index].data() as Map<String, dynamic>;
+              return PostCard(post: post);
+            },
+          );
         },
       ),
     );
   }
 }
-
-// 목데이터 영역
-final List<Map<String, dynamic>> mockPosts = [
-  {
-    'username': 'wondde',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': true,
-  },
-  {
-    'username': 'hegunhee',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': false,
-  },
-  {
-    'username': 'vagus3',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 99,
-    'comments': 13,
-    'isLiked': true,
-  },
-  {
-    'username': 'moho3',
-    'userImage': 'https://picsum.photos/200',
-    'postImage': 'https://picsum.photos/200',
-    'caption': 'dkdk',
-    'likes': 13,
-    'comments': 13,
-    'isLiked': false,
-  },
-];
 
 /// 포스트카드 위젯
 class PostCard extends StatefulWidget {
@@ -85,8 +70,9 @@ class _PostCardState extends State<PostCard>
   @override
   void initState() {
     super.initState();
-    isLiked = widget.post['isLiked'];
-    likedCount = widget.post['likes'];
+    isLiked = widget.post['isLiked'] ?? false;
+    final likes = widget.post['likes'] as List<dynamic>? ?? [];
+    likedCount = likes.length;
     _isBookmarked = false;
 
     _heartAnimationController = AnimationController(
@@ -185,7 +171,8 @@ class _PostCardState extends State<PostCard>
           child: Stack(
             children: [
               Image.network(
-                widget.post['postImage'],
+                widget.post['postImage'] ??
+                    'https://picsum.photos/seed/real1/600/600',
                 width: double.infinity,
                 fit: BoxFit.fill,
                 loadingBuilder: (context, child, loadingProgress) {
