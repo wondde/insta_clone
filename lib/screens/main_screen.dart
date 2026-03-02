@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/screens/auth/login_screen.dart';
 import 'package:insta_clone/screens/feed_screen.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
     Center(child: Text('검색부분')), // 아직 빈 화면
     Center(child: Text('새 게시물')),
     Center(child: Text('릴스')),
+    LoginScreen(),
     ProfileScreen(),
   ];
 
@@ -56,10 +58,16 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(Icons.add_box),
             label: '투고',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.video_collection_outlined),
             activeIcon: Icon(Icons.video_collection),
             label: '릴스',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.abc),
+            activeIcon: Icon(Icons.add_box),
+            label: 'dd',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_outlined),
