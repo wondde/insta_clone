@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 /// 프로필 스크린
@@ -21,6 +22,12 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(onPressed: null, icon: Icon(Icons.add_box_outlined)),
           IconButton(onPressed: null, icon: Icon(Icons.menu)),
+          IconButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+            icon: Icon(Icons.logout),
+          ),
         ],
       ),
       body: SingleChildScrollView(
