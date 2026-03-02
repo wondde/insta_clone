@@ -138,13 +138,7 @@ class _PostCardState extends State<PostCard>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                    username: widget.post['username'],
-                    userImage: widget.post['userImage'],
-                    isMyProfile: false,
-                  ),
-                ),
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
               );
             },
             child: Row(
