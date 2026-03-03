@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
@@ -37,7 +38,7 @@ class FeedScreen extends StatelessWidget {
             itemCount: posts.length,
             itemBuilder: (context, index) {
               final post = posts[index].data() as Map<String, dynamic>;
-              return PostCard(post: post);
+              return PostCard(post: post, postId: posts[index].id);
             },
           );
         },
@@ -49,9 +50,10 @@ class FeedScreen extends StatelessWidget {
 /// 포스트카드 위젯
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> post;
+  final String postId;
 
   /// 포스트카드 생성자
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, required this.postId});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -105,7 +107,31 @@ class _PostCardState extends State<PostCard>
     super.dispose();
   }
 
-  void _toggleLike() {
+  /* void _toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+      likedCount += isLiked ? 1 : -1;
+    });
+  } */
+
+  Future<void> _toggleLike() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final postRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId);
+
+    if (isLiked) {
+      //좋아요 취소
+      await postRef.update({
+        'likes': FieldValue.arrayRemove([uid]),
+      });
+    } else {
+      //좋아요 추가
+      await postRef.update({
+        'likes': FieldValue.arrayUnion([uid]),
+      });
+    }
+
     setState(() {
       isLiked = !isLiked;
       likedCount += isLiked ? 1 : -1;
