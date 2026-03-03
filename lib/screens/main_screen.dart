@@ -56,6 +56,7 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(Icons.add_box),
             label: '투고',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.video_collection_outlined),
             activeIcon: Icon(Icons.video_collection),
