@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:insta_clone/screens/create_post/create_post_screen.dart';
 import 'package:insta_clone/screens/feed_screen.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
@@ -93,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CreatPostScreen(imageFile: File(image.path)),
+          builder: (context) => CreatePostScreen(imageFile: File(image.path)),
         ),
       );
     }
