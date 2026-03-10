@@ -191,7 +191,7 @@ class _PostCardState extends State<PostCard>
           child: Stack(
             children: [
               Image.network(
-                widget.post['postImage'] ??
+                widget.post['imageUrl'] ??
                     'https://picsum.photos/seed/real1/600/600',
                 width: double.infinity,
                 fit: BoxFit.fill,

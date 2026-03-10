@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:insta_clone/screens/create_post/create_post_screen.dart';
 import 'package:insta_clone/screens/feed_screen.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
@@ -24,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
+        // pageview 조사하기
         index: _currentIndex,
         children: _screens,
       ), // body에 그냥 _screens[_currentIndex] 주면 현재 탭만 빌드함. 메모리는 절약하겠지만 상태 유실,,
@@ -31,6 +36,11 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
+          if (index == 2) {
+            // + 누르면 걍 화면 전환 없이 이미지 선택하는 걸로. 탭 인덱스는 안 바꿈
+            _createPost();
+            return;
+          }
           setState(() {
             _currentIndex = index;
           });
@@ -70,5 +80,25 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _createPost() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1080,
+      imageQuality: 85,
+    );
+
+    if (image == null) return;
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreatePostScreen(imageFile: File(image.path)),
+        ),
+      );
+    }
   }
 }
