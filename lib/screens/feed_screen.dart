@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_clone/screens/comments/comments_screen.dart';
 import 'package:insta_clone/screens/profile_screen.dart';
 
 /// 피드 스크린
@@ -248,9 +249,37 @@ class _PostCardState extends State<PostCard>
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(width: 10),
-              Icon(Icons.mode_comment_outlined),
-              SizedBox(width: 5),
-              Text(widget.post['comments'].toString()),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CommentsScreen(postId: widget.postId),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.chat_bubble_outline),
+              ),
+              // SizedBox(width: 5),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CommentsScreen(postId: widget.postId),
+                    ),
+                  );
+                },
+                child: Text(
+                  '${widget.post['commentCount']}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
               SizedBox(width: 10),
               Icon(Icons.send_outlined),
               Spacer(),
